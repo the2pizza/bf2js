@@ -1,8 +1,6 @@
 package stack
 
-import (
-	"errors"
-)
+import "errors"
 
 type (
 	Stack struct {
