@@ -1,19 +1,24 @@
 package main
 
 import (
-	"stack"
+	"github.com/the2pizza/bf2js/stack"
 	"fmt"
 )
 
 
 func main() {
 
-	var stack Stack(char)
+	stack *stack.Stack = stack.New()
 
-	stack.Push('>')
-	stack.Push('.')
+	s.Push('>')
+	s.Push('.')
 
-	c = stack.Pop()
+	c := s.Pop()
+	var s2 stack.Stack
+
+	c2 := s2.Pop()
+
+	fmt.Println('S2: ', c2)
 
 	fmt.Println("POP: ", c)
 
