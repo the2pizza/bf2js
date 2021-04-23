@@ -32,3 +32,9 @@ Transpiles bf program to js and puts file to ```build/```
 ```make transpile <file> ```
 
 
+#ToDo
+
+- Support vanilla JS for run in browser
+- Add nicely handling arguments, options 
+- Add more validators for BF program (at least brackets validator)
+
