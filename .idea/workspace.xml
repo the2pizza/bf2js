@@ -5,9 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf952d90-7291-4b73-a035-cee29c895dd1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/build/debug.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bf2js" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/.gitkeep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Prime.b" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/a.out" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bf2js.go" beforeDir="false" afterPath="$PROJECT_DIR$/bf2js.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/2hello.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Factor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/b.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/b.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/debug.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/f.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/h.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/hanoi.b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/hanoi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/hello.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/life.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Hanoi.b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/euler.b" beforeDir="false" afterPath="$PROJECT_DIR$/tests/euler.b" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
