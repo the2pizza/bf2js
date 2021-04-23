@@ -2,133 +2,101 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
-	"github.com/the2pizza/bf2js/stack"
 	"io"
-	"io/ioutil"
 	"os"
 )
 
-func eval(r io.Reader, i io.Reader, w io.Writer) error {
-	prog, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-	input := bufio.NewReader(i) // buffered reader for `,` requests
+func deleteComments(file string) string {
 
-	var (
-		fpos uint   = 0                  // file position
-		dpos uint   = 0                  // data position
-		size uint   = 30000              // size of data card
-		plen uint   = uint(len(prog))    // programme length
-		data []byte = make([]byte, size) // data card with `size` items
-		promt = 0
-	)
+	/* Lines with // could contain special symbols such as .,[] which we are using for transpiling to JS
+	   It's the reason we delet them before running transpiling
 
-	jumps, err := bfJumps(prog)  // pre-computed jumps
+	 */
 
-	if err != nil {
-		return err
-	}
-
-	for fpos < plen {
-		switch prog[fpos] {
-		case '+': // increment at current position
-			data[dpos]++
-		case '-': // decrement at current position
-			data[dpos]--
-		case '>': // move to next position
-			if dpos == size-1 {
-				dpos = 0
-			} else {
-				dpos++
-			}
-		case '<': // move to previous position
-			if dpos == 0 {
-				dpos = size - 1
-			} else {
-				dpos--
-			}
-		case '.': // output value of current position
-			fmt.Fprintf(w, "%c", data[dpos])
-		case ',': // read value into current position
-		    if promt == 0 {
-				fmt.Fprintf(w, "%v: ", "In")
-				promt = 1
-			}
-			if data[dpos], err = input.ReadByte(); err != nil {
-				os.Exit(0)
-			}
-
-		case '[': // if current position is false, skip to ]
-			if data[dpos] == 0 {
-				fpos = jumps[fpos]
-			}
-		case ']': // if at current position true, return to [
-			if data[dpos] != 0 {
-				fpos = jumps[fpos]
-			}
-		}
-		fpos++
-	}
-	return nil
-}
-
-
-func bfJumps(prog []byte) (map[uint]uint, error) {
-	var (
-		stack *stack.Stack = stack.New()
-		jumps map[uint]uint = make(map[uint]uint)
-
-		plen uint = uint(len(prog))
-		fpos uint = 0
-	)
-
-	for fpos < plen {
-		switch prog[fpos] {
-		case '[':
-			stack.Push(fpos)
-		case ']':
-			tget, err := stack.Pop()
-			if err != nil {
-				return nil, errors.New(
-					"unexpected closing bracket",
-				)
-			}
-			jumps[tget] = fpos
-			jumps[fpos] = tget
-		}
-		fpos++
-	}
-
-	_, err := stack.Pop()
-	if err == nil {
-		return nil, errors.New(
-			"excessive opening brackets",
-		)
-	}
-
-	fmt.Println("Jumps", jumps)
-	return jumps, nil
-}
-
-
-
-func main() {
-
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "%v\n", "Error: programm accepts only 1 argument")
-		os.Exit(-1)
-	}
-
-	r, err := os.Open(os.Args[1])
+	r, err := os.Open(file)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(-1)
 	}
+	defer r.Close()
 
-	err = eval(r, os.Stdin, os.Stdout)
+	scanner := bufio.NewScanner(r)
+	SLASH := "/"
+
+	slashCode := []byte(SLASH)[0]
+	commentCodeSlashes := slashCode*slashCode+slashCode+slashCode
+
+	scanner.Split(bufio.ScanLines)
+	var prog string
+	var line string
+
+	for scanner.Scan() {
+		line = scanner.Text()
+		code := line[0]*line[1]+line[0]+line[1]
+
+		if code == commentCodeSlashes {
+			continue
+		}
+		prog += line
+	}
+
+    return prog
+}
+
+func transpile(prog string, w io.Writer) error {
+	
+	var (
+		fpos uint   = 0                  
+		size uint   = 30000
+		plen  = uint(len(prog))
+		)
+
+	fmt.Fprint(w, "//The script is generated. Do not edit manually\n\n")
+	fmt.Fprint(w, "\nlet fs = require('fs');")
+	fmt.Fprint(w, "\nfunction getChar() {\nlet buf = Buffer.alloc(1)\n  fs.readSync(0, buf, 0, 1); return buf.toString('ascii').charCodeAt(0);}")
+	fmt.Fprint(w, "\nfunction checkedDecrement(d){ if (d === 0) {return 255} return --d} ")
+	fmt.Fprint(w, "\nfunction checkedIncrement(d){ if (d === 255) {return 0} return ++d} ")
+	fmt.Fprintf(w, "\nlet d=new Array(%d);", size)
+	fmt.Fprint(w, "\nlet i=0; let output=\"\";")
+	fmt.Fprintf(w, "\nfor(a=0; a<%d; a++){d[a]=0}", size-1)
+
+	for fpos < plen {
+		switch prog[fpos] {
+		case '+':
+			fmt.Fprint(w, "d[i]=checkedIncrement(d[i]);")
+		case '-':
+			fmt.Fprint(w, "d[i]=checkedDecrement(d[i]);")
+		case '>':
+		    fmt.Fprint(w, "i++;")
+		case '<':
+			fmt.Fprint(w, "i--;")
+		case '.':
+			fmt.Fprint(w, "\n\toutput+=String.fromCharCode(d[i]);")
+		case ',':
+			fmt.Fprint(w," d[i] = getChar(); console.log('CHAR:',d[i]);")
+		case '[':
+			fmt.Fprint(w, "\nwhile(d[i]){")
+		case ']':
+			fmt.Fprint(w, "\n}\n")
+		}
+		fpos++
+	}
+
+	fmt.Fprint(w, "\nconsole.log(output);")
+	return nil
+}
+
+func main() {
+
+	if len(os.Args) != 2 {
+		fmt.Fprintf(os.Stderr, "%v\n", "Error: programm accepts only 1 argument: filename of bf program")
+		os.Exit(-1)
+	}
+
+	p := deleteComments(os.Args[1])
+
+	err := transpile(p, os.Stdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%b\n", err)
 		os.Exit(-1)
