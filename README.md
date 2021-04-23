@@ -2,6 +2,8 @@
 
 bf2js is a transpiler from brainf*ck to js (nodejs)
 
+You could find examples of BF programs in ```tests/```
+
 ## Usage
 
 By default build, trnaspiles and runs js code
