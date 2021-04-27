@@ -1,3 +1,4 @@
-./idea/*
+.idea/*
+./bin/*
 bf2js
 build/*js

@@ -6,7 +6,7 @@ You could find examples of BF programs in ```tests/```
 
 ## Usage
 
-By default build, trnaspiles and runs js code
+By default builds, transpiles and runs js code
 
 ```make file=<filename>```
 
@@ -18,19 +18,18 @@ Builds source golang code to binary
 
 ```make build ```
 
+### Transpile
+
+Transpiles bf program to js and puts file to ```build/```
+
+```make transpile file=<file> ```
+
 
 ### Run compiled JS
 
 Runs transpiled js program 
 
-```make run-node file=build/<file>.js```
-
-### Transpile 
-
-Transpiles bf program to js and puts file to ```build/``` 
-
-```make transpile <file> ```
-
+```make run file=build/<file>.js```
 
 #ToDo
 
